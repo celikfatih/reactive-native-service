@@ -29,6 +29,7 @@ public class NativeServiceApplication {
     ApplicationListener<AvailabilityChangeEvent<?>> availabilityChangeEventApplicationListener() {
         return event -> log.info("{} : {}", event.getResolvableType(), event.getState());
     }
+
     @Bean
     ApplicationListener<ApplicationReadyEvent> applicationReadyEventApplicationListener(CustomerRepository customerRepository) {
         return event -> Flux.just("Alex", "Cristian", "Maria", "Kate")
@@ -62,10 +63,11 @@ class AvailabilityHttpController {
     }
 
     @GetMapping(path = {"/slow"})
-    void slow() throws Exception {
+    void slow() throws InterruptedException {
         Thread.sleep(10_000);
     }
 }
+
 interface CustomerRepository extends ReactiveCrudRepository<Customer, Integer> {}
 
 record Customer (@Id Integer id, String name) {}
